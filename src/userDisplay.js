@@ -2,6 +2,12 @@ import Ship from './Ship.js';
 import Gameboard from './Gameboard.js';
 import Player from './Player.js';
 import gameRunner from './gameRunner';
-import display from './userDisplay.js';
 
-console.log(new Ship(7));
+
+const display = (function() {
+
+
+    return { }
+})()
+
+export default display;
