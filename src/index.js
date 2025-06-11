@@ -3,5 +3,11 @@ import Gameboard from './Gameboard.js';
 import Player from './Player.js';
 import gameRunner from './gameRunner';
 import display from './userDisplay.js';
+import './styles.css'
+import waveIcon from './wave.svg';
 
-console.log(new Ship(7));
+const player1 = new Player();
+const player2 = new Player();
+player2.isComputer = true;
+
+gameRunner.playGame(player1, player2);

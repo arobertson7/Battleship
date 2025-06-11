@@ -1,0 +1,127 @@
+/* RESET */
+
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+  font-family: "Red Hat Display";
+}
+
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5;
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 5. Improve media defaults */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 6. Inherit fonts for form controls */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* 7. Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/*
+  9. Create a root stacking context
+*/
+#root, #__next {
+  isolation: isolate;
+}
+
+/* *********************************************************************************************************************************** */
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+.container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: navy;
+}
+
+.player-divider {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    background-color: black;
+    left: calc(50%) - 10px;
+}
+
+.game {
+  height: calc(100% - 80px);
+  width: calc(100% - 80px);
+  margin: 40px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#player1, #player2 {
+    position: relative;
+    height: 100%;
+    width: 44%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(17, 97, 183);
+}
+
+#player-one-header, #player-two-header {
+    color: white;
+    position: absolute;
+    top: -40px;
+}
+
+.enemy-board, .player-board {
+    width: 97%;
+    height: calc(100% - 3px);
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    justify-items: center;
+    align-items: center;
+}
+
+.enemy-board {
+    border-bottom: 3px solid black;
+}
+
+.player-board {
+    border-top: 3px solid black;
+}
+
+.enemy-board img, .player-board img {
+    width: 30px;
+}
+
+.cannon-ball-fade {
+    transition: opacity 1s ease-out;
+}

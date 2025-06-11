@@ -421,14 +421,37 @@ test('not all ships sunk', () => {
     expect(newBoard.allShipsSunk()).toBe(false);
 })
 
+test('10 hits on same location, not sunk', () => {
+    const newBoard = new Gameboard();
+    const ship = new Ship(10);
+
+    newBoard.placeShip(ship, 3, 0);
+    // board after that placement
+    // [[null, null, null, null, null, null, null, null, null, null],
+    // [null, null, null, null, null, null, null, null, null, null],
+    // [null, null, null, null, null, null, null, null, null, null],
+    // [ship, ship, ship, ship, ship, ship, ship, ship, ship, ship],
+    // [null, null, null, null, null, null, null, null, null, null],
+    // [null, null, null, null, null, null, null, null, null, null],
+    // [null, null, null, null, null, null, null, null, null, null],
+    // [null, null, null, null, null, null, null, null, null, null],
+    // [null, null, null, null, null, null, null, null, null, null],
+    // [null, null, null, null, null, null, null, null, null, null]];
+
+    for (let i = 0; i < 10; i++) {
+        newBoard.receiveAttack(3, 3);
+    }
+    expect(newBoard.allShipsSunk()).toBe(false);
+})
+
 // ----------
 // GameRunner
 // ----------
 
-// gameRunner.initializeBoard
+// gameRunner.initializeRandomBoard
 test('initialize random board', () => {
     const board = new Gameboard();
-    gameRunner.initializeBoard(board);
+    gameRunner.initializeRandomBoard(board);
 
     let positionsFilled = 0;
     for (let i = 0; i < 10; i++) {

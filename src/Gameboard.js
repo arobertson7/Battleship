@@ -1,3 +1,6 @@
+import './Ship.js';
+import HashMap from './hash-map/hashMap.js';
+
 class Gameboard {
     constructor() {
         this.board = []; // 10x10 matrix
@@ -8,7 +11,7 @@ class Gameboard {
             }
         }
 
-        this.missedAttacks = [];
+        this.missedAttacks = new HashMap();
     }
 
     placeShip(ship, startRow, startCol) {
@@ -42,6 +45,7 @@ class Gameboard {
         return true;
     }
 
+    // returns true if it was a valid attack, hit or miss, false if out of bounds or already successfully attacked position
     receiveAttack(row, col) {
         // position out of bounds
         if (row < 0 || row >= 10 || col < 0 || col >= 10) {
@@ -50,7 +54,11 @@ class Gameboard {
 
         // attack is a miss
         if (!this.board[row][col]) {
-            this.missedAttacks.push([row, col]);
+            this.missedAttacks.set(`${row}${col}`, true);
+            return true;
+        }
+        // position already hit
+        else if (this.board[row][col] == 'hit') {
             return false;
         }
         // attack is a hit
@@ -58,6 +66,7 @@ class Gameboard {
             const targetedShip = this.board[row][col];
             if (!targetedShip.isSunk()) {
                 targetedShip.hit();
+                this.board[row][col] = 'hit';
             }
             return true;
         }
@@ -67,8 +76,7 @@ class Gameboard {
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
                 if (this.board[i][j] != null) {
-                    const ship = this.board[i][j];
-                    if (!ship.isSunk()) {
+                    if (this.board[i][j] != 'hit') {
                         return false;
                     }
                 }
