@@ -52,6 +52,7 @@ h1, h2, h3, h4, h5, h6 {
 /* *********************************************************************************************************************************** */
 
 html, body {
+  background-color: navy;
   height: 100%;
   width: 100%;
 }
@@ -66,42 +67,153 @@ html, body {
   background-color: navy;
 }
 
-.player-divider {
+#opener {
+    width: 100%;
+    height: calc(100% - 50px);
     position: absolute;
-    width: 10px;
-    height: 100%;
-    background-color: black;
-    left: calc(50%) - 10px;
+    top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 200px;
+    color: white;
 }
 
-.game {
-  height: calc(100% - 80px);
-  width: calc(100% - 80px);
-  margin: 40px;
+#select-board-display {
+    position: relative;
+    top: 20px;
+    height: 80%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#chooseBoardMessage {
+    position: absolute;
+    color: white;
+    top: 25px;
+}
+
+#select-board-display .player-board {
+    width: 100%;
+    height: 80%;
+    border-top: none;
+    border: 1.5px solid silver;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.options-buttons {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.options-buttons button {
+    position: relative;
+    width: 45%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: rgb(7, 112, 225);
+    color: rgba(255, 255, 255, 0.891);
+    border: none;
+    box-shadow: 1.2px 1.2px 1.2px 1.2px rgba(0, 0, 0, 0.536);
+    font-weight: 600;
+    letter-spacing: 0.02rem;
+}
+
+#refresh-icon {
+    width: 15%;
+    position: absolute;
+    left: 20px;
+    bottom: 29%;
+}
+
+.options-buttons button:first-child {
+        text-align: right;
+        padding-right: 20px;
+}
+
+.options-buttons button:last-child {
+    background-color: rgb(47, 181, 93);
+}
+
+#game {
+  position: relative;
+  height: calc(100% - 40px);
+  width: calc(100% - 40px);
+  margin: 20px;
   padding: 10px;
   display: flex;
   justify-content: space-between;
 }
 
-#player1, #player2 {
+.temp-divider {
+  position: absolute;
+  top: 50%;
+  left: 4%;
+  height: 4px;
+  background-color: black;
+  width: 92%;
+}
+
+.temp-message-container {
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    height: calc(50% - 3px);
+    color: rgba(255, 255, 255, 0.908);
+    top: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    letter-spacing: 0.05rem;
+}
+
+.temp-message-fade {
+    transition: opacity 1s ease-out;
+}
+
+.temp-message-fade-fast {
+    transition: opacity 0.5s ease-out;
+}
+
+.temp-message-container-enemy {
+    top: 0%;
+}
+
+#play-game-button {
+    width: 50%;
+    height: 10%;
+    border-radius: 20px;
+    color: rgb(0, 122, 254);
+    box-shadow: 1.2px 1.2px 1.2px 1.2px rgba(0, 0, 0, 0.536);
+}
+
+#player1 {
     position: relative;
     height: 100%;
-    width: 44%;
+    width: 100%;
     background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgb(17, 97, 183);
+    background-color: rgba(17, 97, 183, 0.724);
 }
 
 #player-one-header, #player-two-header {
     color: white;
     position: absolute;
-    top: -40px;
+    top: -30px;
 }
 
 .enemy-board, .player-board {
-    width: 97%;
+    width: 100%;
     height: calc(100% - 3px);
     display: grid;
     grid-template-columns: repeat(10, 1fr);
@@ -122,6 +234,10 @@ html, body {
     width: 30px;
 }
 
+.cannon-ball-fade-fast {
+    /* transition: opacity 0s ease-out; */
+}
+
 .cannon-ball-fade {
-    transition: opacity 1s ease-out;
+    transition: opacity 0.8s ease-out;
 }

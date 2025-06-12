@@ -1,6 +1,6 @@
 import Ship from './Ship.js';
 import Gameboard from './Gameboard.js';
-import Player from './Player.js';
+import { Player, HitTracker } from './Player.js';
 import display from './userDisplay.js';
 
 const gameRunner = (function() {
@@ -34,17 +34,16 @@ const gameRunner = (function() {
         }
     }
 
-    const playGame = function(playerOne, playerTwo) {
-        player1 = playerOne;
-        player2 = playerTwo
+    const playGame = async function() {
+        player1 = new Player();
+        player2 = new Player();
+        player2.isComputer = true;
+
         initializeRandomBoard(player1.playerBoard);
         initializeRandomBoard(player2.playerBoard);
-        
-        display.displayPlayerBoard(player1.playerBoard, 'player1');
-        display.displayEnemyBoard(player2.playerBoard, 'player1', 'player1');
-        display.displayPlayerBoard(player2.playerBoard, 'player2');
-        display.displayEnemyBoard(player1.playerBoard, 'player2', 'player1');
 
+        await playerPlaceShips();
+        display.setUpGameDisplay(player1.playerBoard, player2.playerBoard);
 
     }
 
@@ -54,6 +53,7 @@ const gameRunner = (function() {
             display.displayWinner(winningPlayer);
             return;
         }
+
         turnNumber++;
         const playerUp = turnNumber % 2 == 1 ? 'player1' : 'player2';
         display.displayWhichPlayersTurn(playerUp);
@@ -63,7 +63,7 @@ const gameRunner = (function() {
         // right now, computer is always player2
         if (turnNumber % 2 == 0) {
             setTimeout(() => {
-                const computerCoordinates = player2.playComputerTurn(player1.playerBoard);
+                const computerCoordinates = player2.playSmartComputerTurn(player1.playerBoard);
                 const rowChoice = computerCoordinates[0];
                 const colChoice = computerCoordinates[1];
                 if (player1.playerBoard.board[rowChoice][colChoice] == null) {
@@ -72,11 +72,27 @@ const gameRunner = (function() {
                         nextTurn();
                     }, 2000)
                 }
+                else if (player1.playerBoard.board[rowChoice][colChoice] == 'hit') {
+                    player2.recentHitTracker = new HitTracker(rowChoice, colChoice, player1.playerBoard);
+                    nextTurn();
+                }
                 else {
                     nextTurn();
                 }
             }, 3000);
         }
+    }
+
+    const playerPlaceShips = async function() {
+        display.showBoardChoices(player1);
+        display.displayPlayerBoard(player1.playerBoard, 'select-board-display');
+
+        return new Promise((resolve) => {
+            const confirmBoardButton = document.getElementById('confirm-board-button');
+            confirmBoardButton.addEventListener('click', () => {
+                resolve(true);
+            })
+        })
     }
 
     return { playGame, initializeRandomBoard, nextTurn }
