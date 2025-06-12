@@ -89,7 +89,7 @@ html, body {
     gap: 40px;
 }
 
-#chooseBoardMessage {
+#chooseBoardMessage, #rules-message {
     position: absolute;
     color: white;
     top: 25px;
@@ -99,9 +99,10 @@ html, body {
     width: 100%;
     height: 80%;
     border-top: none;
-    border: 1.5px solid silver;
+    border: 3px solid silver;
     border-radius: 10px;
     padding: 10px;
+    background-color: navy;
 }
 
 .options-buttons {
@@ -118,12 +119,13 @@ html, body {
     width: 45%;
     height: 100%;
     border-radius: 20px;
-    background-color: rgb(7, 112, 225);
+    background-color: rgba(161, 64, 163, 0.87);
     color: rgba(255, 255, 255, 0.891);
     border: none;
-    box-shadow: 1.2px 1.2px 1.2px 1.2px rgba(0, 0, 0, 0.536);
-    font-weight: 600;
+    box-shadow: 1.2px 1.2px 1.2px 1.2px rgba(0, 0, 0, 0.381);
+    font-weight: 700;
     letter-spacing: 0.02rem;
+    text-shadow: 0.7px 0.7px 1px rgba(0, 0, 0, 0.345);
 }
 
 #refresh-icon {
@@ -140,6 +142,30 @@ html, body {
 
 .options-buttons button:last-child {
     background-color: rgb(47, 181, 93);
+}
+
+#rules-container {
+    grid-column: 1/11;
+    grid-row: 1/11;
+    width: 100%;
+    height: 100%;
+    padding: 0px 10px;
+    display: flex;
+    flex-direction: column;
+    color: rgb(255, 255, 255);
+    justify-content: space-around;
+    font-weight: 700;
+    font-size: 1.13rem;
+    color: rgba(255, 255, 255, 0.859);
+    text-shadow: 0.7px 0.7px 1px rgba(0, 0, 0, 0.345);
+}
+
+#lets-go-button {
+    width: 60%;
+    font-weight: 700;
+    text-shadow: 0.7px 0.7px 1px rgba(0, 0, 0, 0.345);
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.693), 1%, rgb(7, 112, 225));
+    text-align: center; padding-right: 0px;
 }
 
 #game {
@@ -192,7 +218,7 @@ html, body {
     height: 10%;
     border-radius: 20px;
     color: rgb(0, 122, 254);
-    box-shadow: 1.2px 1.2px 1.2px 1.2px rgba(0, 0, 0, 0.536);
+    box-shadow: 1.2px 1.2px 1.2px 1.2px rgba(0, 0, 0, 0.381);
 }
 
 #player1 {
@@ -240,4 +266,20 @@ html, body {
 
 .cannon-ball-fade {
     transition: opacity 0.8s ease-out;
+}
+
+.finger {
+    position: absolute;
+    top: -150px;
+    right: -100px;
+    font-size: 8rem;
+    transform: rotate(-10deg);
+}
+
+.finger2 {
+    position: absolute;
+    font-size: 8rem;
+    transform: rotate(-10deg);
+    top: 0px;
+    right: 10px;
 }

@@ -42,6 +42,7 @@ const gameRunner = (function() {
         initializeRandomBoard(player1.playerBoard);
         initializeRandomBoard(player2.playerBoard);
 
+        await display.showRules();
         await playerPlaceShips();
         display.setUpGameDisplay(player1.playerBoard, player2.playerBoard);
 
@@ -90,7 +91,9 @@ const gameRunner = (function() {
         return new Promise((resolve) => {
             const confirmBoardButton = document.getElementById('confirm-board-button');
             confirmBoardButton.addEventListener('click', () => {
-                resolve(true);
+                if (!document.querySelector('.finger')) {
+                    resolve(true);
+                }
             })
         })
     }

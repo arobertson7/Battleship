@@ -133,22 +133,15 @@ const display = (function() {
 
     const showBoardChoices = function(player) {
         const container = document.querySelector('.container');
-        const opener = document.getElementById('opener');
-        container.removeChild(opener);
 
         const chooseBoardMessage = document.createElement('h2');
         chooseBoardMessage.id = 'chooseBoardMessage';
-        chooseBoardMessage.textContent = 'Choose a formation';
+        chooseBoardMessage.textContent = 'Choose your formation';
         container.appendChild(chooseBoardMessage);
 
-        const selectBoardDisplay = document.createElement('div');
-        selectBoardDisplay.id = 'select-board-display';
-        const board = document.createElement('div');
-        board.classList.add('player-board');
-        selectBoardDisplay.appendChild(board);
-        const buttonsContainer = document.createElement('div');
-        buttonsContainer.classList.add('options-buttons');
-        selectBoardDisplay.appendChild(buttonsContainer);
+       
+        const buttonsContainer = document.querySelector('.options-buttons');
+
         const refreshBoardButton = document.createElement('button');
         refreshBoardButton.textContent = 'Generate';
         const refreshSVG = document.createElement('img');
@@ -170,7 +163,26 @@ const display = (function() {
 
         buttonsContainer.appendChild(refreshBoardButton);
         buttonsContainer.appendChild(confirmBoardButton);
-        container.appendChild(selectBoardDisplay);
+
+        const finger = document.createElement('p');
+        finger.textContent = '👆';
+        finger.classList.add('finger');
+        finger.style.visibility = 'hidden';
+        refreshBoardButton.appendChild(finger);
+        setTimeout(() => {
+            finger.style.visibility = 'visible';
+            zoomFinger(finger, -150, -100);
+        }, 1000);
+        setTimeout(() => {
+            const newBoard = new Gameboard();
+            gameRunner.initializeRandomBoard(newBoard);
+            player.playerBoard = newBoard;
+            clearBoard('select-board-display', 'player');
+            displayPlayerBoard(newBoard, 'select-board-display');
+        }, 2100);
+        setTimeout(() => {
+            refreshBoardButton.removeChild(finger);
+        }, 2900)
     }
 
     const setUpGameDisplay = function(playerBoardObj, enemyBoardObj) {
@@ -251,7 +263,7 @@ const display = (function() {
             enemySideMessage.textContent = 'Attack!';
             enemySideMessageContainer.style.opacity = "1";
         }, timer);
-        timer += 1000;
+        timer += 1500;
         setTimeout(() => {
             enemySideMessageContainer.classList.add('temp-message-fade-fast');
             enemySideMessageContainer.style.opacity = "0";
@@ -265,10 +277,112 @@ const display = (function() {
             game.removeChild(playerSideMessageContainer);
             game.removeChild(enemySideMessageContainer);
         }, timer);
-        
+        timer += 100;
+        setTimeout(() => {
+            const finger2 = document.createElement('p');
+            finger2.textContent = '👆';
+            finger2.classList.add('finger2');
+            container.appendChild(finger2);
+
+            zoomFinger(finger2, -20, -10);
+        }, timer);
+        timer += 1000;
+        setTimeout(() => {
+            const enemyBoardDiv = document.querySelector('.enemy-board');
+            const enemyBoardIcons = enemyBoard.querySelectorAll('img');
+            enemyBoardIcons[46].src = cannonBallIcon;
+        }, timer);
+
+        timer += 1250;
+        setTimeout(() => {
+            const finger2 = document.querySelector('.finger2');
+            container.removeChild(finger2);
+            const enemyBoardDiv = document.querySelector('.enemy-board');
+            const enemyBoardIcons = enemyBoard.querySelectorAll('img');
+            enemyBoardIcons[46].src = waveIcon;
+        }, timer);
     }
 
-    return { displayPlayerBoard, displayEnemyBoard, clearBoard, refreshBoards, animateMissedAttack, displayWhichPlayersTurn, displayWinner, showBoardChoices, setUpGameDisplay };
+    const showRules = async function() {
+        const container = document.querySelector('.container');
+        const opener = document.getElementById('opener');
+        container.removeChild(opener);
+
+        const rulesMessage = document.createElement('h2');
+        rulesMessage.id = 'rules-message';
+        rulesMessage.textContent = 'Rules';
+        container.appendChild(rulesMessage);
+
+        const selectBoardDisplay = document.createElement('div');
+        selectBoardDisplay.id = 'select-board-display';
+        const board = document.createElement('div');
+        board.classList.add('player-board');
+        selectBoardDisplay.appendChild(board);
+        container.appendChild(selectBoardDisplay);
+
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('options-buttons');
+        selectBoardDisplay.appendChild(buttonsContainer);
+        const letsGoButton = document.createElement('button');
+        letsGoButton.id = 'lets-go-button';
+        letsGoButton.textContent = "Let's Go →";
+        buttonsContainer.appendChild(letsGoButton);
+
+        const rulesContainer = document.createElement('div');
+        rulesContainer.id = 'rules-container';
+        board.appendChild(rulesContainer);
+        const rule1 = document.createElement('p');
+        rule1.textContent = '• Each player places 5 ships on their board, unseen by their opponent.';
+        const rule2 = document.createElement('p');
+        rule2.textContent = "• Players take turns trying to find and attack their opponent's ships.";
+        const rule3 = document.createElement('p');
+        rule3.textContent = "• The first player to sink all of their opponent's ships wins.";
+        const rule4 = document.createElement('p');
+        rule4.textContent = "• Place your ships strategically!";
+        rulesContainer.appendChild(rule1);
+        rulesContainer.appendChild(rule2);
+        rulesContainer.appendChild(rule3);
+        rulesContainer.appendChild(rule4);
+
+        return new Promise((resolve) => {
+            letsGoButton.addEventListener('click', () => {
+                container.removeChild(rulesMessage);
+                buttonsContainer.removeChild(letsGoButton);
+                board.removeChild(rulesContainer);
+                board.style.backgroundColor = "rgba(255,255,255,0)";
+                resolve(true);
+            })
+        })
+    }
+
+    // assumes that the finger element starts at font-sice of 8rem. takes it down to 3rem
+    const zoomFinger = function(fingerDOMElement, startTop, startRight) {
+        let curSize = 8.00;
+        let curTop = startTop;
+        let curRight = startRight;
+        console.log(curTop);
+        console.log(curRight);
+        let timer = 0;
+        for (let i = 0; i < 500; i++) {
+            timer += 2;
+            curSize -= .01;
+            curSize = curSize.toFixed(2);
+            curTop += 0.34;
+            curRight += 0.25;
+            zoomHelper(fingerDOMElement, curSize, curTop, curRight, timer);
+        }
+    }
+
+    const zoomHelper = function(fingerDOMElement, newFingerSize, newTop, newRight, timer) {
+        setTimeout(() => {
+            fingerDOMElement.style.fontSize = `${newFingerSize}rem`;
+            fingerDOMElement.style.top = `${newTop}px`;
+            fingerDOMElement.style.right = `${newRight}px`;
+            console.log('done');
+        }, timer);
+    }
+
+    return { displayPlayerBoard, displayEnemyBoard, clearBoard, refreshBoards, animateMissedAttack, displayWhichPlayersTurn, displayWinner, showBoardChoices, setUpGameDisplay, showRules };
 })()
 
 export default display;
