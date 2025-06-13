@@ -3,10 +3,10 @@ import HashMap from './hash-map/hashMap.js';
 
 class Gameboard {
     constructor() {
-        this.board = []; // 10x10 matrix
-        for (let i = 0; i < 10; i++) {
+        this.board = []; // 9x9 matrix
+        for (let i = 0; i < 9; i++) {
             this.board.push([]);
-            for (let j = 0; j < 10; j++) {
+            for (let j = 0; j < 9; j++) {
                 this.board[i].push(null);
             }
         }
@@ -19,7 +19,7 @@ class Gameboard {
         let endRow = startRow;
         let endCol = startCol;
         ship.direction == 'horizontal' ? endCol += ship.length - 1 : endRow += ship.length - 1;
-        if (startRow < 0 || endRow >= 10 || startCol < 0 || endCol >= 10) {
+        if (startRow < 0 || endRow >= 9 || startCol < 0 || endCol >= 9) {
             return false;
         }
 
@@ -48,7 +48,7 @@ class Gameboard {
     // returns true if it was a valid attack, hit or miss, false if out of bounds or already successfully attacked position
     receiveAttack(row, col) {
         // position out of bounds
-        if (row < 0 || row >= 10 || col < 0 || col >= 10) {
+        if (row < 0 || row >= 9 || col < 0 || col >= 9) {
             return false;
         }
 

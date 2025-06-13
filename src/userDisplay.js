@@ -71,14 +71,14 @@ const display = (function() {
                 
         if (offensivePlayer == 'player1') {
             const attackersBoard = document.getElementById(`${offensivePlayer}`).querySelector('.enemy-board');
-            const offensivePositionIcon = attackersBoard.querySelectorAll('img')[row * 10 + col];
+            const offensivePositionIcon = attackersBoard.querySelectorAll('img')[row * 9 + col];
             offensivePositionIcon.src = '';
             offensivePositionIcon.style.border = "none";
             // offensivePositionIcon.style.outline = "none";
         }
         else if (defensivePlayer == 'player1') {
             const defendersBoard = document.getElementById(`${defensivePlayer}`).querySelector('.player-board');
-            const defensivePositionIcon = defendersBoard.querySelectorAll('img')[row * 10 + col];
+            const defensivePositionIcon = defendersBoard.querySelectorAll('img')[row * 9 + col];
             defensivePositionIcon.src = cannonBallIcon;
             defensivePositionIcon.style.opacity = "0";
         
@@ -177,13 +177,13 @@ const display = (function() {
 
         // shuffle and array of indexes 0-99
         const shuffledIndexes = [];
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < allBoardPositions.length; i++) {
             shuffledIndexes.push(i);
         }
         for (let i = 0; i < 100; i++) {
             // get 2 random positions on from the board
-            let index1 = Math.floor(Math.random() * 100);
-            let index2 = Math.floor(Math.random() * 100);
+            let index1 = Math.floor(Math.random() * allBoardPositions.length);
+            let index2 = Math.floor(Math.random() * allBoardPositions.length);
 
             // swap them in the array
             let temp = shuffledIndexes[index1];

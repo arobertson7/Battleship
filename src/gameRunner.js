@@ -16,11 +16,11 @@ const gameRunner = (function() {
     const initializeRandomBoard = function(board) {
         const carrier = new Ship(5);
         const battleship = new Ship(4);
-        const cruiser = new Ship(3);
+        // const cruiser = new Ship(3);
         const submarine = new Ship(3);
         const destroyer = new Ship(2);
 
-        const ships = [carrier, battleship, cruiser, submarine, destroyer];
+        const ships = [carrier, battleship, submarine, destroyer];
 
         for (let i = 0; i < ships.length; i++) {
             const curShip = ships[i];

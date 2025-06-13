@@ -5,7 +5,6 @@ class HitTracker {
     // takes the coordinates of the succesful attack and the target board obj
     constructor(row, col, targetBoard) {
         this.potentialTargets = this.getPossibleTargets(row, col, targetBoard);
-        console.log(this.potentialTargets);
     }
 
     // takes the coordinates of the succesful attack
@@ -23,7 +22,7 @@ class HitTracker {
             const row = coordinate[0];
             const col = coordinate[1];
             // if in bounds
-            if (row >= 0 && row < 10 && col >= 0 && col < 10) {
+            if (row >= 0 && row < 9 && col >= 0 && col < 9) {
                 // if not already a missed attack
                 if (!targetBoard.missedAttacks.has(`${row}${col}`)) {
                     // and if not already a succesful attack
@@ -77,7 +76,7 @@ class Player {
         if (this.isComputer) {
             // returns random int between 0-9 
             const getRandomCoordinate = function() {
-                return Math.floor(Math.random() * 10);
+                return Math.floor(Math.random() * 9);
             }
 
             let moveMade = false;
