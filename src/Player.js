@@ -26,7 +26,7 @@ class HitTracker {
                 // if not already a missed attack
                 if (!targetBoard.missedAttacks.has(`${row}${col}`)) {
                     // and if not already a succesful attack
-                    if (targetBoard.board[row][col] != 'hit') {
+                    if (!targetBoard.board[row][col] || !targetBoard.board[row][col].positionIsHit(row, col)) {
                         validTargets.push(coordinate);
                     }
                 } 

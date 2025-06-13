@@ -34,10 +34,7 @@ const display = (function() {
                     case gameboardObj.board[i][j] == null:
                         boardIcon.src = waveIcon;
                         break;
-                    case gameboardObj.board[i][j] == 'hit':
-                        boardIcon.src = damagedShipIcon;
-                        break;
-                    default:
+                    case gameboardObj.board[i][j].positionIsHit(i, j):
                         switch(true) {
                             case gameboardObj.board[i][j].name == 'battleship':
                                 boardIcon.src = hitRedBoatIcon;
@@ -50,6 +47,22 @@ const display = (function() {
                                 break;
                             case gameboardObj.board[i][j].name == 'destroyer':
                                 boardIcon.src = hitSailboatIcon;
+                                break;
+                        }
+                        break;
+                    default:
+                        switch(true) {
+                            case gameboardObj.board[i][j].name == 'battleship':
+                                boardIcon.src = redBoatIcon;
+                                break;
+                            case gameboardObj.board[i][j].name == 'carrier':
+                                boardIcon.src = blueBoatIcon;
+                                break;
+                            case gameboardObj.board[i][j].name == 'submarine':
+                                boardIcon.src = submarineIcon;
+                                break;
+                            case gameboardObj.board[i][j].name == 'destroyer':
+                                boardIcon.src = greenBoatIcon;
                                 break;
                         }
                         break;
@@ -70,7 +83,7 @@ const display = (function() {
                 if (enemyGameboardObj.missedAttacks.has(`${i}${j}`)) {
                     boardIcon.src = '';
                 }
-                else if (enemyGameboardObj.board[i][j] == 'hit') {
+                else if (enemyGameboardObj.board[i][j] && enemyGameboardObj.board[i][j].positionIsHit(i, j)) {
                     boardIcon.src = enemyDamagedShipIcon;
                 }
                 else {

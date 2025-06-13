@@ -74,7 +74,7 @@ const gameRunner = (function() {
                         nextTurn();
                     }, 2000)
                 }
-                else if (player1.playerBoard.board[rowChoice][colChoice] == 'hit') {
+                else if (player1.playerBoard.board[rowChoice][colChoice].positionIsHit(rowChoice, colChoice)) {
                     player2.recentHitTracker = new HitTracker(rowChoice, colChoice, player1.playerBoard);
                     nextTurn();
                 }

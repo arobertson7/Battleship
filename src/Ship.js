@@ -12,9 +12,10 @@ class Ship {
         this.hitPositions = new HashMap();
     }
 
-    hit() {
+    hit(row, col) {
         this.hitsTaken++;
-        
+        this.markPositionHit(row, col);
+
         if (this.hitsTaken >= this.length) {
             this.sunk = true;
         }
@@ -32,6 +33,7 @@ class Ship {
 
     // mod
     positionIsHit(row, col) {
+        console.log(this.hitPositions.has(`${row}${col}`));
         return this.hitPositions.has(`${row}${col}`);
     }
 

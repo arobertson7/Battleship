@@ -60,15 +60,14 @@ class Gameboard {
             return true;
         }
         // position already hit
-        else if (this.board[row][col] == 'hit') {
+        else if (this.board[row][col].positionIsHit(row, col)) {
             return false;
         }
         // attack is a hit
         else {
             const targetedShip = this.board[row][col];
             if (!targetedShip.isSunk()) {
-                targetedShip.hit();
-                this.board[row][col] = 'hit';
+                targetedShip.hit(row, col);
             }
             this.lastAttackLocation = [row, col];
             return true;
@@ -79,7 +78,7 @@ class Gameboard {
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
                 if (this.board[i][j] != null) {
-                    if (this.board[i][j] != 'hit') {
+                    if (!this.board[i][j].positionIsHit(i, j)) {
                         return false;
                     }
                 }
