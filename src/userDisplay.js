@@ -8,6 +8,7 @@ import damagedShipIcon from './damaged-ship.svg';
 import enemyDamagedShipIcon from './enemy-damaged-ship.svg';
 import cannonBallIcon from './cannon-ball.png';
 import refreshIcon from './refresh.svg';
+import singleWaveIcon from './single-wave.svg';
 
 const display = (function() {
     // param 'player' is a string 'player1' or 'player2'
@@ -122,13 +123,106 @@ const display = (function() {
     }
 
     const displayWinner = function(winningPlayer) {
-        const winningPlayersHeader = winningPlayer == 'player1' ? document.getElementById('player-one-header') : document.getElementById('player-two-header');
-        const otherPlayersHeader = winningPlayer == 'player1' ? document.getElementById('player-two-header') : document.getElementById('player-one-header');
+        const losersBoard = winningPlayer == 'player1' ? document.querySelector('.enemy-board') : document.querySelector('.player-board');
+        const winnersBoard = winningPlayer == 'player1' ? document.querySelector('.player-board') : document.querySelector('.enemy-board');
 
-        winningPlayersHeader.textContent = `${winningPlayer} wins!`;
-        winningPlayersHeader.style.visibility = 'visible';
-        otherPlayersHeader.textContent = `${winningPlayer} wins!`;
-        otherPlayersHeader.style.visibility = 'visible';
+        // remove icon borders if player one
+        if (winningPlayer == 'player1') {
+            const icons = losersBoard.querySelectorAll('img');
+            for (let i = 0; i < icons.length; i++) {
+                icons[i].style.border = 'none';
+            }
+        }
+
+        dropBombsOnLosingBoard(losersBoard);
+
+        setTimeout(() => {
+            const losingBoardIcons = losersBoard.querySelectorAll('img');
+            for (let i = 0; i < losingBoardIcons.length; i++) {
+                losingBoardIcons[i].style.opacity = '0';
+                setTimeout(() => {
+                    losersBoard.removeChild(losingBoardIcons[i]);
+                }, 800);
+            }
+        }, 8200);
+        setTimeout(() => {
+            const winningMessageContainer = document.createElement('div');
+            winningMessageContainer.style.opacity = '0';
+            winningMessageContainer.classList.add('game-over-board-fade-2');
+            winningMessageContainer.id = 'winning-message-container';
+            losersBoard.appendChild(winningMessageContainer);
+
+            const message = document.createElement('h2');
+            const playAgainButton = document.createElement('button');
+            winningMessageContainer.appendChild(message);
+            winningMessageContainer.appendChild(playAgainButton);
+
+            message.textContent = winningPlayer == 'player1' ? 'You won!' : 'Defeated.';
+            playAgainButton.textContent = winningPlayer == 'player1' ? 'Play again' : 'Try again';
+
+            losersBoard.classList.add('game-over-board-fade');
+            setTimeout(() => {
+                winningMessageContainer.style.opacity = '1';
+            }, 20)
+            losersBoard.style.backgroundColor = winningPlayer == 'player1' ? 'rgb(47, 181, 93)' : 'rgba(167, 24, 72, 0.87)';
+
+            // playAgainButton.addEventListener('click', () => {
+
+            // })
+        }, 9050);
+    }
+
+    const dropBombsOnLosingBoard = function(board) {
+        const allBoardPositions = board.querySelectorAll('img');
+
+        // shuffle and array of indexes 0-99
+        const shuffledIndexes = [];
+        for (let i = 0; i < 100; i++) {
+            shuffledIndexes.push(i);
+        }
+        for (let i = 0; i < 100; i++) {
+            // get 2 random positions on from the board
+            let index1 = Math.floor(Math.random() * 100);
+            let index2 = Math.floor(Math.random() * 100);
+
+            // swap them in the array
+            let temp = shuffledIndexes[index1];
+            shuffledIndexes[index1] = shuffledIndexes[index2];
+            shuffledIndexes[index2] = temp;
+        }
+
+        // now that positions are shuffled
+        let timer = 0;
+        for (let i = 0; i < shuffledIndexes.length; i++) {
+            const randomIndex = shuffledIndexes[i];
+            const randomIcon = allBoardPositions[randomIndex];
+
+            dropSingleBomb(randomIcon, timer);
+            timer += 50;
+        }
+    }
+
+    const dropSingleBomb = function(icon, timer) {
+        setTimeout(() => {
+            setTimeout(() => {
+                icon.style.opacity = '0';
+                icon.src = cannonBallIcon;
+                icon.classList.add('cannon-ball-fade-fast');
+                icon.style.opacity = "1";
+            }, 50);
+
+            setTimeout(() => {
+                icon.classList.remove('cannon-ball-fade-fast');
+                icon.classList.add('cannon-ball-fade');
+            }, 550)
+            setTimeout(() => {
+                icon.style.opacity = "0";
+            }, 1000)
+            setTimeout(() => {
+                icon.src = singleWaveIcon;
+                icon.style.opacity = '1';
+            }, 1800)
+        }, timer);
     }
 
     const showBoardChoices = function(player) {
@@ -172,17 +266,19 @@ const display = (function() {
         setTimeout(() => {
             finger.style.visibility = 'visible';
             zoomFinger(finger, -150, -100);
-        }, 1000);
+        }, 1500);
         setTimeout(() => {
             const newBoard = new Gameboard();
             gameRunner.initializeRandomBoard(newBoard);
             player.playerBoard = newBoard;
             clearBoard('select-board-display', 'player');
             displayPlayerBoard(newBoard, 'select-board-display');
-        }, 2100);
+            refreshBoardButton.style.boxShadow = 'inset 2px 2px 2px 2px rgba(0, 0, 0, 0.381)';
+        }, 2600);
         setTimeout(() => {
             refreshBoardButton.removeChild(finger);
-        }, 2900)
+            refreshBoardButton.style.boxShadow = null;
+        }, 3400)
     }
 
     const setUpGameDisplay = function(playerBoardObj, enemyBoardObj) {
@@ -360,8 +456,7 @@ const display = (function() {
         let curSize = 8.00;
         let curTop = startTop;
         let curRight = startRight;
-        console.log(curTop);
-        console.log(curRight);
+        
         let timer = 0;
         for (let i = 0; i < 500; i++) {
             timer += 2;
@@ -378,7 +473,6 @@ const display = (function() {
             fingerDOMElement.style.fontSize = `${newFingerSize}rem`;
             fingerDOMElement.style.top = `${newTop}px`;
             fingerDOMElement.style.right = `${newRight}px`;
-            console.log('done');
         }, timer);
     }
 
