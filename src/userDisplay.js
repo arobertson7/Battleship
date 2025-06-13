@@ -406,7 +406,7 @@ const display = (function() {
 
         const rulesMessage = document.createElement('h2');
         rulesMessage.id = 'rules-message';
-        rulesMessage.textContent = 'Rules';
+        rulesMessage.textContent = 'How To Play';
         container.appendChild(rulesMessage);
 
         const selectBoardDisplay = document.createElement('div');
