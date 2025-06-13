@@ -423,7 +423,7 @@ const display = (function() {
 
         const rulesMessage = document.createElement('h2');
         rulesMessage.id = 'rules-message';
-        rulesMessage.textContent = 'How To Play';
+        rulesMessage.textContent = "Find and sink your opponent's ships before they sink yours!";
         container.appendChild(rulesMessage);
 
         const selectBoardDisplay = document.createElement('div');
@@ -444,18 +444,51 @@ const display = (function() {
         const rulesContainer = document.createElement('div');
         rulesContainer.id = 'rules-container';
         board.appendChild(rulesContainer);
+
         const rule1 = document.createElement('p');
-        rule1.textContent = '• Each player places 5 ships on their board, unseen by their opponent.';
-        const rule2 = document.createElement('p');
-        rule2.textContent = "• Players take turns trying to find and attack their opponent's ships.";
-        const rule3 = document.createElement('p');
-        rule3.textContent = "• The first player to sink all of their opponent's ships wins.";
-        const rule4 = document.createElement('p');
-        rule4.textContent = "• Place your ships strategically!";
+        rule1.textContent = "Each player has 4 ships of different sizes";
+
+        const rule2 = document.createElement('div');
+        rule2.classList.add('boat-rule');
+        const rule2Message = document.createElement('p');
+        const rule2Icon = document.createElement('img');
+        rule2Icon.src = blueBoatIcon;
+        rule2Message.textContent = " Battleship - 5";
+        rule2.appendChild(rule2Icon);
+        rule2.appendChild(rule2Message);
+
+        const rule3 = document.createElement('div');
+        rule3.classList.add('boat-rule');
+        const rule3Message = document.createElement('p');
+        const rule3Icon = document.createElement('img');
+        rule3Icon.src = redBoatIcon;
+        rule3Message.textContent = " Carrier - 4";;
+        rule3.appendChild(rule3Icon);
+        rule3.appendChild(rule3Message);
+
+        const rule4 = document.createElement('div');
+        rule4.classList.add('boat-rule');
+        const rule4Message = document.createElement('p');
+        const rule4Icon = document.createElement('img');
+        rule4Icon.src = submarineIcon;
+        rule4Message.textContent = " Submarine - 3";;
+        rule4.appendChild(rule4Icon);
+        rule4.appendChild(rule4Message);
+
+        const rule5 = document.createElement('div');
+        rule5.classList.add('boat-rule');
+        const rule5Message = document.createElement('p');
+        const rule5Icon = document.createElement('img');
+        rule5Icon.src = greenBoatIcon;
+        rule5Message.textContent = " Sailboat - 2";;
+        rule5.appendChild(rule5Icon);
+        rule5.appendChild(rule5Message);
+
         rulesContainer.appendChild(rule1);
         rulesContainer.appendChild(rule2);
         rulesContainer.appendChild(rule3);
         rulesContainer.appendChild(rule4);
+        rulesContainer.appendChild(rule5);
 
         return new Promise((resolve) => {
             letsGoButton.addEventListener('click', () => {

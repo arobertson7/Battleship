@@ -93,6 +93,12 @@ html, body {
     position: absolute;
     color: white;
     top: 25px;
+    text-align: center;
+}
+
+#rules-message {
+    top: 15px;
+    font-size: 1.2rem;
 }
 
 #select-board-display .player-board {
@@ -154,9 +160,23 @@ html, body {
     flex-direction: column;
     color: rgb(255, 255, 255);
     justify-content: space-around;
-    font-weight: 700;
-    font-size: 1.13rem;
+    font-weight: 600;
+    font-size: 1.2rem;
     color: rgba(255, 255, 255, 0.898);
+    text-shadow: 0.7px 0.7px 1px rgba(0, 0, 0, 0.345);
+}
+
+#rules-container p:first-child {
+    text-align: center;
+}
+
+.boat-rule {
+    padding-left: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 1.08rem;
     text-shadow: 0.7px 0.7px 1px rgba(0, 0, 0, 0.345);
 }
 
