@@ -9,6 +9,10 @@ import enemyDamagedShipIcon from './enemy-damaged-ship.svg';
 import cannonBallIcon from './cannon-ball.png';
 import refreshIcon from './refresh.svg';
 import singleWaveIcon from './single-wave.svg';
+import submarineIcon from './submarine.svg';
+import blueBoatIcon from './blue-boat.svg';
+import redBoatIcon from './red-boat.svg';
+import greenBoatIcon from './green-boat.svg';
 
 const display = (function() {
     // param 'player' is a string 'player1' or 'player2'
@@ -30,7 +34,20 @@ const display = (function() {
                         boardIcon.src = damagedShipIcon;
                         break;
                     default:
-                        boardIcon.src = shipIcon;
+                        switch(true) {
+                            case gameboardObj.board[i][j].name == 'battleship':
+                                boardIcon.src = redBoatIcon;
+                                break;
+                            case gameboardObj.board[i][j].name == 'carrier':
+                                boardIcon.src = blueBoatIcon;
+                                break;
+                            case gameboardObj.board[i][j].name == 'submarine':
+                                boardIcon.src = submarineIcon;
+                                break;
+                            case gameboardObj.board[i][j].name == 'destroyer':
+                                boardIcon.src = greenBoatIcon;
+                                break;
+                        }
                         break;
                 }
             }
