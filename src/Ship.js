@@ -1,3 +1,5 @@
+import HashMap from "./hash-map/hashMap.js";
+
 class Ship {
     constructor(name, length) {
         this.name = name
@@ -7,6 +9,7 @@ class Ship {
 
         // mod
         this.direction = 'horizontal';
+        this.hitPositions = new HashMap();
     }
 
     hit() {
@@ -25,6 +28,15 @@ class Ship {
     // mod
     toggleDirection() {
         this.direction == 'horizontal' ? this.direction = 'vertical' : this.direction = 'horizontal';
+    }
+
+    // mod
+    positionIsHit(row, col) {
+        return this.hitPositions.has(`${row}${col}`);
+    }
+
+    markPositionHit(row, col) {
+        this.hitPositions.set(`${row}${col}`, true);
     }
 }
 

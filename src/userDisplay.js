@@ -13,6 +13,10 @@ import submarineIcon from './submarine.svg';
 import blueBoatIcon from './blue-boat.svg';
 import redBoatIcon from './red-boat.svg';
 import greenBoatIcon from './green-boat.svg';
+import hitRedBoatIcon from './hit-red-ship.svg';
+import hitBlueBoatIcon from './hit-blue-boat.svg'
+import hitSubmarineIcon from './hit-submarine.svg';
+import hitSailboatIcon from './hit-sailboat.svg';
 
 const display = (function() {
     // param 'player' is a string 'player1' or 'player2'
@@ -36,16 +40,16 @@ const display = (function() {
                     default:
                         switch(true) {
                             case gameboardObj.board[i][j].name == 'battleship':
-                                boardIcon.src = redBoatIcon;
+                                boardIcon.src = hitRedBoatIcon;
                                 break;
                             case gameboardObj.board[i][j].name == 'carrier':
-                                boardIcon.src = blueBoatIcon;
+                                boardIcon.src = hitBlueBoatIcon;
                                 break;
                             case gameboardObj.board[i][j].name == 'submarine':
-                                boardIcon.src = submarineIcon;
+                                boardIcon.src = hitSubmarineIcon;
                                 break;
                             case gameboardObj.board[i][j].name == 'destroyer':
-                                boardIcon.src = greenBoatIcon;
+                                boardIcon.src = hitSailboatIcon;
                                 break;
                         }
                         break;
@@ -139,7 +143,7 @@ const display = (function() {
         // 'Your turn!' : "Computer's Turn";
     }
 
-    const displayWinner = function(winningPlayer) {
+    const displayWinner = function(winningPlayer, enemyBoardObj) {
         const losersBoard = winningPlayer == 'player1' ? document.querySelector('.enemy-board') : document.querySelector('.player-board');
         const winnersBoard = winningPlayer == 'player1' ? document.querySelector('.player-board') : document.querySelector('.enemy-board');
 
@@ -151,7 +155,7 @@ const display = (function() {
             }
         }
 
-        dropBombsOnLosingBoard(losersBoard);
+        dropBombsOnLosingBoard(losersBoard, enemyBoardObj);
 
         setTimeout(() => {
             const losingBoardIcons = losersBoard.querySelectorAll('img');
@@ -161,7 +165,7 @@ const display = (function() {
                     losersBoard.removeChild(losingBoardIcons[i]);
                 }, 800);
             }
-        }, 8200);
+        }, 6500);
         setTimeout(() => {
             const winningMessageContainer = document.createElement('div');
             winningMessageContainer.style.opacity = '0';
@@ -186,27 +190,34 @@ const display = (function() {
             // playAgainButton.addEventListener('click', () => {
 
             // })
-        }, 9050);
+        }, 7400);
     }
 
-    const dropBombsOnLosingBoard = function(board) {
+    const dropBombsOnLosingBoard = function(board, enemyBoardObj) {
         const allBoardPositions = board.querySelectorAll('img');
+
+        const lastAttackRow = enemyBoardObj.lastAttackLocation[0];
+        const lastAttackCol = enemyBoardObj.lastAttackLocation[1];
+        const lastAttackIconIndex = lastAttackRow * 9 + lastAttackCol;
 
         // shuffle and array of indexes 0-99
         const shuffledIndexes = [];
         for (let i = 0; i < allBoardPositions.length; i++) {
-            shuffledIndexes.push(i);
+            if (i != lastAttackIconIndex) {
+                shuffledIndexes.push(i);
+            }
         }
         for (let i = 0; i < 100; i++) {
             // get 2 random positions on from the board
-            let index1 = Math.floor(Math.random() * allBoardPositions.length);
-            let index2 = Math.floor(Math.random() * allBoardPositions.length);
+            let index1 = Math.floor(Math.random() * (allBoardPositions.length - 1));
+            let index2 = Math.floor(Math.random() * (allBoardPositions.length - 1));
 
             // swap them in the array
             let temp = shuffledIndexes[index1];
             shuffledIndexes[index1] = shuffledIndexes[index2];
             shuffledIndexes[index2] = temp;
         }
+        shuffledIndexes.unshift(lastAttackIconIndex);
 
         // now that positions are shuffled
         let timer = 0;
@@ -224,12 +235,10 @@ const display = (function() {
             setTimeout(() => {
                 icon.style.opacity = '0';
                 icon.src = cannonBallIcon;
-                icon.classList.add('cannon-ball-fade-fast');
                 icon.style.opacity = "1";
             }, 50);
 
             setTimeout(() => {
-                icon.classList.remove('cannon-ball-fade-fast');
                 icon.classList.add('cannon-ball-fade');
             }, 550)
             setTimeout(() => {
@@ -397,13 +406,13 @@ const display = (function() {
             finger2.classList.add('finger2');
             container.appendChild(finger2);
 
-            zoomFinger(finger2, -20, -10);
+            zoomFinger(finger2, -40, -32);
         }, timer);
         timer += 1000;
         setTimeout(() => {
             const enemyBoardDiv = document.querySelector('.enemy-board');
             const enemyBoardIcons = enemyBoard.querySelectorAll('img');
-            enemyBoardIcons[46].src = cannonBallIcon;
+            enemyBoardIcons[24].src = cannonBallIcon;
         }, timer);
 
         timer += 1250;
@@ -412,7 +421,7 @@ const display = (function() {
             container.removeChild(finger2);
             const enemyBoardDiv = document.querySelector('.enemy-board');
             const enemyBoardIcons = enemyBoard.querySelectorAll('img');
-            enemyBoardIcons[46].src = waveIcon;
+            enemyBoardIcons[24].src = waveIcon;
         }, timer);
     }
 

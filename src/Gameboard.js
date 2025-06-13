@@ -12,6 +12,7 @@ class Gameboard {
         }
 
         this.missedAttacks = new HashMap();
+        this.lastAttackLocation = null;
     }
 
     placeShip(ship, startRow, startCol) {
@@ -55,6 +56,7 @@ class Gameboard {
         // attack is a miss
         if (!this.board[row][col]) {
             this.missedAttacks.set(`${row}${col}`, true);
+            this.lastAttackLocation = [row, col];
             return true;
         }
         // position already hit
@@ -68,6 +70,7 @@ class Gameboard {
                 targetedShip.hit();
                 this.board[row][col] = 'hit';
             }
+            this.lastAttackLocation = [row, col];
             return true;
         }
     }

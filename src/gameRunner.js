@@ -51,7 +51,8 @@ const gameRunner = (function() {
     const nextTurn = function() {
         if (player1.playerBoard.allShipsSunk() || player2.playerBoard.allShipsSunk()) {
             const winningPlayer = turnNumber % 2 == 1 ? 'player1' : 'player2';
-            display.displayWinner(winningPlayer);
+            const losingBoard = winningPlayer == 'player1' ? player2.playerBoard : player1.playerBoard;
+            display.displayWinner(winningPlayer, losingBoard);
             return;
         }
 
