@@ -4,7 +4,7 @@ import { Player, HitTracker } from './Player.js';
 import gameRunner from './gameRunner';
 import waveIcon from './big-waves.svg';
 import damagedShipIcon from './damaged-ship.svg';
-import enemyDamagedShipIcon from './enemy-damaged-ship.svg';
+import enemyDamagedShipIcon from './enemy-ship-3.svg';
 import cannonBallIcon from './cannon-ball.png';
 import refreshIcon from './refresh.svg';
 import singleWaveIcon from './single-wave.svg';
@@ -82,6 +82,7 @@ const display = (function() {
     const displayEnemyBoard = function(enemyGameboardObj, player, playerUp) {
         const displayBoard = document.getElementById(`${player}`).querySelector('.enemy-board');
 
+        let previouslySunkenShipName = "";
         for (let i = 0; i < enemyGameboardObj.board.length; i++) {
             for (let j = 0; j < enemyGameboardObj.board[i].length; j++) {
                 const boardIcon = document.createElement('img');
@@ -92,11 +93,22 @@ const display = (function() {
                 }
                 else if (enemyGameboardObj.board[i][j] && enemyGameboardObj.board[i][j].positionIsHit(i, j)) {
                     if (enemyGameboardObj.board[i][j].isSunk()) {
-                        boardIcon.classList.add('hit-ship');
-                        setShipIcon(enemyGameboardObj.board[i][j], boardIcon, true);
+                        if (enemyGameboardObj.lastAttackLocation && (i == enemyGameboardObj.lastAttackLocation[0] && j == enemyGameboardObj.lastAttackLocation[1])) {
+                            previouslySunkenShipName = enemyGameboardObj.board[i][j].name;
+                            const shipName = enemyGameboardObj.board[i][j].name;
+                            showSunkenEnemyShip(shipName, enemyGameboardObj);
+                        }
+                        else {
+                            if (previouslySunkenShipName != enemyGameboardObj.board[i][j].name) {
+                                console.log()
+                                boardIcon.classList.add('hit-ship');
+                                setShipIcon(enemyGameboardObj.board[i][j], boardIcon, true);
+                            }
+                        }
                     }
                     else {
                         boardIcon.src = enemyDamagedShipIcon;
+                        boardIcon.style.opacity = '0.85';
                     }
                 }
                 else {
@@ -111,6 +123,32 @@ const display = (function() {
                 }
             }
         }
+    }
+
+    const showSunkenEnemyShip = function(shipName, enemyBoardObj) {
+        const sunkenShipIconIndexes = [];
+        for (let i = 0; i < enemyBoardObj.board.length; i++) {
+            for (let j = 0; j < enemyBoardObj.board[i].length; j++) {
+                if (enemyBoardObj.board[i][j] && enemyBoardObj.board[i][j].name == shipName) {
+                    sunkenShipIconIndexes.push([i, j]);
+                }
+            }
+        }
+
+        setTimeout(() => {
+            const boardDisplayIcons = document.querySelector('.enemy-board').querySelectorAll('img');
+            for (let i = 0; i < sunkenShipIconIndexes.length; i++) {
+                const boardRow = sunkenShipIconIndexes[i][0];
+                const boardColumn = sunkenShipIconIndexes[i][1];
+                const shipIcon = boardDisplayIcons[boardRow * 9 + boardColumn];
+                shipIcon.src = cannonBallIcon;
+                setTimeout(() => {
+                    setShipIcon(enemyBoardObj.board[boardRow][boardColumn], shipIcon, true);
+                    animateSinkShip(shipIcon);
+                }, 750);
+            }
+            enemyBoardObj.lastAttackLocation = null;
+        }, 20)
     }
 
     const setShipIcon = function(shipObj, boardIcon, shipIsHit) {
@@ -157,8 +195,6 @@ const display = (function() {
             curTilt++;
             curOpaciy -= 0.0025;
             timer += 7;
-            console.log(curTilt);
-            console.log(curOpaciy);
         }
     }
 
@@ -329,6 +365,9 @@ const display = (function() {
             setTimeout(() => {
                 icon.src = singleWaveIcon;
                 icon.style.opacity = '1';
+                if (icon.classList.contains('hit-ship')) {
+                    icon.classList.remove('hit-ship');
+                }
             }, 1800)
         }, timer);
     }
