@@ -4,7 +4,7 @@ import { Player, HitTracker } from './Player.js';
 import gameRunner from './gameRunner';
 import waveIcon from './big-waves.svg';
 import damagedShipIcon from './damaged-ship.svg';
-import enemyDamagedShipIcon from './enemy-ship-3.svg';
+import enemyDamagedShipIcon from './ship.svg';
 import cannonBallIcon from './cannon-ball.png';
 import refreshIcon from './refresh.svg';
 import singleWaveIcon from './single-wave.svg';
