@@ -4,11 +4,11 @@ import Gameboard from './Gameboard.js'
 class HitTracker {
     // takes the coordinates of the succesful attack and the target board obj
     constructor(row, col, targetBoard) {
-        this.potentialTargets = this.getPossibleTargets(row, col, targetBoard);
+        this.potentialTargets = this.getAdjacentTargets(row, col, targetBoard);
     }
 
     // takes the coordinates of the succesful attack
-    getPossibleTargets(row, col, targetBoard) {
+    getAdjacentTargets(row, col, targetBoard) {
         let up = [row - 1, col];
         let left = [row, col - 1];
         let down = [row + 1, col];
@@ -35,6 +35,44 @@ class HitTracker {
         return validTargets.length != 0 ? validTargets : null;
     }
 }
+
+// class AdvancedHitTracker {
+//     // takes the coordinates of the succesful attack and the target board obj
+//     constructor(row, col, targetBoard) {
+//         this.hitLocation = [row, col]
+//         this.potentialTargets = this.getTargets(row, col, targetBoard);
+//     }
+
+//     // takes the coordinates of the succesful attack
+//     getTargets(row, col, targetBoard) {
+//         let up = [row - 1, col];
+//         let left = [row, col - 1];
+//         let down = [row + 1, col];
+//         let right = [row, col + 1];
+
+//         // determine 
+
+//         let fourDirectionCoordinates = [up, left, down, right];
+
+//         let validTargets = [];
+//         for (let i = 0; i < fourDirectionCoordinates.length; i++) {
+//             const coordinate = fourDirectionCoordinates[i];
+//             const row = coordinate[0];
+//             const col = coordinate[1];
+//             // if in bounds
+//             if (row >= 0 && row < 9 && col >= 0 && col < 9) {
+//                 // if not already a missed attack
+//                 if (!targetBoard.missedAttacks.has(`${row}${col}`)) {
+//                     // and if not already a succesful attack
+//                     if (!targetBoard.board[row][col] || !targetBoard.board[row][col].positionIsHit(row, col)) {
+//                         validTargets.push(coordinate);
+//                     }
+//                 } 
+//             }
+//         }
+//         return validTargets.length != 0 ? validTargets : null;
+//     }
+// }
 
 class Player {
     constructor(name) {

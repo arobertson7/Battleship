@@ -533,7 +533,7 @@ const display = (function() {
         setTimeout(() => {
             const enemyBoardDiv = document.querySelector('.enemy-board');
             const enemyBoardIcons = enemyBoard.querySelectorAll('img');
-            enemyBoardIcons[24].src = cannonBallIcon;
+            enemyBoardIcons[33].src = cannonBallIcon;
         }, timer);
 
         timer += 1250;
@@ -542,7 +542,7 @@ const display = (function() {
             container.removeChild(finger2);
             const enemyBoardDiv = document.querySelector('.enemy-board');
             const enemyBoardIcons = enemyBoard.querySelectorAll('img');
-            enemyBoardIcons[24].src = waveIcon;
+            enemyBoardIcons[33].src = waveIcon;
         }, timer);
     }
 
