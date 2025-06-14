@@ -527,6 +527,13 @@ const display = (function() {
             finger2.classList.add('finger2');
             container.appendChild(finger2);
 
+            const tapMessageDiv = document.createElement('div');
+            tapMessageDiv.classList.add('tap-to-attack-message');
+            const message = document.createElement('p');
+            message.textContent = 'Tap to send an attack!';
+            tapMessageDiv.appendChild(message);
+            container.appendChild(tapMessageDiv);
+
             zoomFinger(finger2, -40, -32);
         }, timer);
         timer += 1000;
@@ -540,6 +547,11 @@ const display = (function() {
         setTimeout(() => {
             const finger2 = document.querySelector('.finger2');
             container.removeChild(finger2);
+            const tapToAttackMessage = document.querySelector('.tap-to-attack-message');
+            tapToAttackMessage.style.opacity = '0';
+            setTimeout(() => {
+                    container.removeChild(tapToAttackMessage);
+            }, 400);
             const enemyBoardDiv = document.querySelector('.enemy-board');
             const enemyBoardIcons = enemyBoard.querySelectorAll('img');
             enemyBoardIcons[33].src = waveIcon;
