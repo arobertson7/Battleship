@@ -28,9 +28,32 @@ const display = (function() {
                 displayBoard.appendChild(boardIcon);
 
                 if (gameboardObj.lastAttackLocation && (i == gameboardObj.lastAttackLocation[0] && j == gameboardObj.lastAttackLocation[1])) {
-                    animateSinkShip(boardIcon);
+                    boardIcon.src = cannonBallIcon;
+                    setTimeout(() => {
+                        setShipIcon(gameboardObj.board[i][j], boardIcon, true);
+                        animateSinkShip(boardIcon);
+                        gameboardObj.lastAttackLocation = null;
+                    }, 750);
                 
                 }
+                // if (gameboardObj.lastAttackLocation && (i == gameboardObj.lastAttackLocation[0] && j == gameboardObj.lastAttackLocation[1])) {
+                //     setShipIcon(gameboardObj.board[i][j], boardIcon, true);
+                //     const tempCannonBallIcon = document.createElement('img');
+                //     tempCannonBallIcon.src = cannonBallIcon;
+                //     displayBoard.appendChild(tempCannonBallIcon);
+                //     tempCannonBallIcon.style.gridRow = `${i + 1}`;
+                //     tempCannonBallIcon.style.gridColumn = `${j + 1}`;
+                //     setTimeout(() => { // start the rotation slightly before changing icon for smooth animation
+                //         animateSinkShip(boardIcon);
+                //         tempCannonBallIcon.style.opacity = '0';
+                //     }, 650)
+                //     setTimeout(() => {
+                        
+                //         gameboardObj.lastAttackLocation = null;
+                //     }, 750);
+                
+                // }
+
                 switch(true) {
                     case gameboardObj.missedAttacks.has(`${i}${j}`):
                         boardIcon.src = '';
@@ -41,37 +64,14 @@ const display = (function() {
                     case gameboardObj.board[i][j].positionIsHit(i, j):
                         if (!gameboardObj.lastAttackLocation || !(i == gameboardObj.lastAttackLocation[0] && j == gameboardObj.lastAttackLocation[1])) {
                             boardIcon.classList.add('hit-ship');
+                            // for hit ship icon
+                            setShipIcon(gameboardObj.board[i][j], boardIcon, true);
                         }
-                        switch(true) {
-                            case gameboardObj.board[i][j].name == 'battleship':
-                                boardIcon.src = hitRedBoatIcon;
-                                break;
-                            case gameboardObj.board[i][j].name == 'carrier':
-                                boardIcon.src = hitBlueBoatIcon;
-                                break;
-                            case gameboardObj.board[i][j].name == 'submarine':
-                                boardIcon.src = hitSubmarineIcon;
-                                break;
-                            case gameboardObj.board[i][j].name == 'destroyer':
-                                boardIcon.src = hitSailboatIcon;
-                                break;
-                        }
+                        
                         break;
                     default:
-                        switch(true) {
-                            case gameboardObj.board[i][j].name == 'battleship':
-                                boardIcon.src = redBoatIcon;
-                                break;
-                            case gameboardObj.board[i][j].name == 'carrier':
-                                boardIcon.src = blueBoatIcon;
-                                break;
-                            case gameboardObj.board[i][j].name == 'submarine':
-                                boardIcon.src = submarineIcon;
-                                break;
-                            case gameboardObj.board[i][j].name == 'destroyer':
-                                boardIcon.src = greenBoatIcon;
-                                break;
-                        }
+                        // for non-hit ship icon
+                        setShipIcon(gameboardObj.board[i][j], boardIcon, false);
                         break;
                 }
             }
@@ -92,21 +92,8 @@ const display = (function() {
                 }
                 else if (enemyGameboardObj.board[i][j] && enemyGameboardObj.board[i][j].positionIsHit(i, j)) {
                     if (enemyGameboardObj.board[i][j].isSunk()) {
-                        enemyGameboardObj.board[i][j].classList.add('hit-ship');
-                        switch(true) {
-                            case enemyGameboardObj.board[i][j].name == 'battleship':
-                                boardIcon.src = hitRedBoatIcon;
-                                break;
-                            case enemyGameboardObj.board[i][j].name == 'carrier':
-                                boardIcon.src = hitBlueBoatIcon;
-                                break;
-                            case enemyGameboardObj.board[i][j].name == 'submarine':
-                                boardIcon.src = hitSubmarineIcon;
-                                break;
-                            case enemyGameboardObj.board[i][j].name == 'destroyer':
-                                boardIcon.src = hitSailboatIcon;
-                                break;
-                        }
+                        boardIcon.classList.add('hit-ship');
+                        setShipIcon(enemyGameboardObj.board[i][j], boardIcon, true);
                     }
                     else {
                         boardIcon.src = enemyDamagedShipIcon;
@@ -126,6 +113,41 @@ const display = (function() {
         }
     }
 
+    const setShipIcon = function(shipObj, boardIcon, shipIsHit) {
+        if (shipIsHit) {
+            switch(true) {
+                case shipObj.name == 'battleship':
+                    boardIcon.src = hitRedBoatIcon;
+                    break;
+                case shipObj.name == 'carrier':
+                    boardIcon.src = hitBlueBoatIcon;
+                    break;
+                case shipObj.name == 'submarine':
+                    boardIcon.src = hitSubmarineIcon;
+                    break;
+                case shipObj.name == 'destroyer':
+                    boardIcon.src = hitSailboatIcon;
+                    break;
+            }
+        }
+        else if (!shipIsHit) {
+            switch(true) {
+                case shipObj.name == 'battleship':
+                    boardIcon.src = redBoatIcon;
+                    break;
+                case shipObj.name == 'carrier':
+                    boardIcon.src = blueBoatIcon;
+                    break;
+                case shipObj.name == 'submarine':
+                    boardIcon.src = submarineIcon;
+                    break;
+                case shipObj.name == 'destroyer':
+                    boardIcon.src = greenBoatIcon;
+                    break;
+            }
+        }
+    }
+
     const animateSinkShip = function(shipIcon) {
         let curTilt = 0;
         let curOpaciy = 1;
@@ -134,7 +156,7 @@ const display = (function() {
             sinkShipHelper(shipIcon, curTilt, curOpaciy, timer);
             curTilt++;
             curOpaciy -= 0.0025;
-            timer += 5;
+            timer += 7;
             console.log(curTilt);
             console.log(curOpaciy);
         }
@@ -403,7 +425,7 @@ const display = (function() {
         game.appendChild(tempDivider);
         const playerSideMessageContainer = document.createElement('div');
         const playerSideMessage = document.createElement('h3');
-        playerSideMessage.textContent = 'Your fleet is here ↓';
+        playerSideMessage.textContent = 'Your ships are here ↓';
         playerSideMessageContainer.appendChild(playerSideMessage);
         playerSideMessageContainer.style.opacity = '0';
         playerSideMessageContainer.classList.add('temp-message-container');
