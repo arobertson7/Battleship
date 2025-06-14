@@ -56,7 +56,7 @@ class Gameboard {
         // attack is a miss
         if (!this.board[row][col]) {
             this.missedAttacks.set(`${row}${col}`, true);
-            this.lastAttackLocation = [row, col];
+            this.lastAttackLocation = null;
             return true;
         }
         // position already hit

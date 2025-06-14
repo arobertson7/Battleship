@@ -33,7 +33,6 @@ class Ship {
 
     // mod
     positionIsHit(row, col) {
-        console.log(this.hitPositions.has(`${row}${col}`));
         return this.hitPositions.has(`${row}${col}`);
     }
 

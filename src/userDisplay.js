@@ -3,7 +3,6 @@ import Gameboard from './Gameboard.js';
 import { Player, HitTracker } from './Player.js';
 import gameRunner from './gameRunner';
 import waveIcon from './big-waves.svg';
-import shipIcon from './ship.svg';
 import damagedShipIcon from './damaged-ship.svg';
 import enemyDamagedShipIcon from './enemy-damaged-ship.svg';
 import cannonBallIcon from './cannon-ball.png';
@@ -27,6 +26,11 @@ const display = (function() {
             for (let j = 0; j < gameboardObj.board[i].length; j++) {
                 const boardIcon = document.createElement('img');
                 displayBoard.appendChild(boardIcon);
+
+                if (gameboardObj.lastAttackLocation && (i == gameboardObj.lastAttackLocation[0] && j == gameboardObj.lastAttackLocation[1])) {
+                    animateSinkShip(boardIcon);
+                
+                }
                 switch(true) {
                     case gameboardObj.missedAttacks.has(`${i}${j}`):
                         boardIcon.src = '';
@@ -35,6 +39,9 @@ const display = (function() {
                         boardIcon.src = waveIcon;
                         break;
                     case gameboardObj.board[i][j].positionIsHit(i, j):
+                        if (!gameboardObj.lastAttackLocation || !(i == gameboardObj.lastAttackLocation[0] && j == gameboardObj.lastAttackLocation[1])) {
+                            boardIcon.classList.add('hit-ship');
+                        }
                         switch(true) {
                             case gameboardObj.board[i][j].name == 'battleship':
                                 boardIcon.src = hitRedBoatIcon;
@@ -84,7 +91,26 @@ const display = (function() {
                     boardIcon.src = '';
                 }
                 else if (enemyGameboardObj.board[i][j] && enemyGameboardObj.board[i][j].positionIsHit(i, j)) {
-                    boardIcon.src = enemyDamagedShipIcon;
+                    if (enemyGameboardObj.board[i][j].isSunk()) {
+                        enemyGameboardObj.board[i][j].classList.add('hit-ship');
+                        switch(true) {
+                            case enemyGameboardObj.board[i][j].name == 'battleship':
+                                boardIcon.src = hitRedBoatIcon;
+                                break;
+                            case enemyGameboardObj.board[i][j].name == 'carrier':
+                                boardIcon.src = hitBlueBoatIcon;
+                                break;
+                            case enemyGameboardObj.board[i][j].name == 'submarine':
+                                boardIcon.src = hitSubmarineIcon;
+                                break;
+                            case enemyGameboardObj.board[i][j].name == 'destroyer':
+                                boardIcon.src = hitSailboatIcon;
+                                break;
+                        }
+                    }
+                    else {
+                        boardIcon.src = enemyDamagedShipIcon;
+                    }
                 }
                 else {
                     boardIcon.src = waveIcon;
@@ -98,6 +124,27 @@ const display = (function() {
                 }
             }
         }
+    }
+
+    const animateSinkShip = function(shipIcon) {
+        let curTilt = 0;
+        let curOpaciy = 1;
+        let timer = 0;
+        for (let i = 0; i < 160; i++) {
+            sinkShipHelper(shipIcon, curTilt, curOpaciy, timer);
+            curTilt++;
+            curOpaciy -= 0.0025;
+            timer += 5;
+            console.log(curTilt);
+            console.log(curOpaciy);
+        }
+    }
+
+    const sinkShipHelper = function(shipIcon, tilt, opacity, timer) {
+        setTimeout(() => {
+            shipIcon.style.transform = `rotate(${tilt}deg)`;
+            shipIcon.style.opacity = `${opacity}`;
+        }, timer);
     }
 
     const animateMissedAttack = function(offensivePlayer, row, col) {
@@ -269,7 +316,7 @@ const display = (function() {
 
         const chooseBoardMessage = document.createElement('h2');
         chooseBoardMessage.id = 'chooseBoardMessage';
-        chooseBoardMessage.textContent = 'Choose your formation';
+        chooseBoardMessage.textContent = 'Choose a formation';
         container.appendChild(chooseBoardMessage);
 
        
