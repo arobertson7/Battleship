@@ -531,6 +531,10 @@ const display = (function() {
             tapMessageDiv.classList.add('tap-to-attack-message');
             const message = document.createElement('p');
             message.textContent = 'Tap to send an attack!';
+            tapMessageDiv.style.opacity = '0';
+            setTimeout(() => {
+                tapMessageDiv.style.opacity = '1';
+            }, 20)
             tapMessageDiv.appendChild(message);
             container.appendChild(tapMessageDiv);
 

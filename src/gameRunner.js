@@ -1,6 +1,6 @@
 import Ship from './Ship.js';
 import Gameboard from './Gameboard.js';
-import { Player, HitTracker } from './Player.js';
+import { Player, HitTracker, AdvancedHitTracker } from './Player.js';
 import display from './userDisplay.js';
 
 const gameRunner = (function() {
@@ -75,8 +75,15 @@ const gameRunner = (function() {
                     }, 2000)
                 }
                 else if (player1.playerBoard.board[rowChoice][colChoice].positionIsHit(rowChoice, colChoice)) {
-                    player2.recentHitTracker = new HitTracker(rowChoice, colChoice, player1.playerBoard);
-                    nextTurn();
+                    // if computer is already using a hit tracker when this hit occurs, change it to an advanced hit tracker
+                    if (player2.recentHitTracker) {
+                        player2.recentHitTracker = new AdvancedHitTracker(player2.recentHitTracker.hitLocation, computerCoordinates, player1.playerBoard);
+                        nextTurn();
+                    }
+                    else {
+                        player2.recentHitTracker = new HitTracker(rowChoice, colChoice, player1.playerBoard);
+                        nextTurn();
+                    }
                 }
                 else {
                     nextTurn();

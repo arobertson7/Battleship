@@ -354,5 +354,5 @@ html, body {
     height: 40px;
     font-weight: 700;
     font-size: 1.1rem;
-    transition:  opacity 0.4s ease-out;
+    transition:  opacity 0.4s ease;
 }
