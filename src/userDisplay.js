@@ -18,6 +18,8 @@ import hitSubmarineIcon from './hit-submarine.svg';
 import hitSailboatIcon from './hit-sailboat.svg';
 
 const display = (function() {
+    let gamesCompleted = 0;
+
     // param 'player' is a string 'player1' or 'player2'
     const displayPlayerBoard = function(gameboardObj, player) {
         const displayBoard = document.getElementById(`${player}`).querySelector('.player-board');
@@ -87,6 +89,11 @@ const display = (function() {
             for (let j = 0; j < enemyGameboardObj.board[i].length; j++) {
                 const boardIcon = document.createElement('img');
                 displayBoard.appendChild(boardIcon);
+
+                // if (enemyGameboardObj.board[i][j] && !enemyGameboardObj.board[i][j].positionIsHit(i, j)) {
+                //     boardIcon.classList.add("here's-a-ship");
+                // }
+
                 // if previous miss
                 if (enemyGameboardObj.missedAttacks.has(`${i}${j}`)) {
                     boardIcon.src = '';
@@ -100,7 +107,6 @@ const display = (function() {
                         }
                         else {
                             if (previouslySunkenShipName != enemyGameboardObj.board[i][j].name) {
-                                console.log()
                                 boardIcon.classList.add('hit-ship');
                                 setShipIcon(enemyGameboardObj.board[i][j], boardIcon, true);
                             }
@@ -295,6 +301,9 @@ const display = (function() {
             const playAgainButton = document.createElement('button');
             winningMessageContainer.appendChild(message);
             winningMessageContainer.appendChild(playAgainButton);
+            playAgainButton.addEventListener('click', () => {
+                gameRunner.startNewGame();
+            })
 
             message.textContent = winningPlayer == 'player1' ? 'You won!' : 'Defeated.';
             playAgainButton.textContent = winningPlayer == 'player1' ? 'Play again' : 'Try again';
@@ -405,27 +414,29 @@ const display = (function() {
         buttonsContainer.appendChild(refreshBoardButton);
         buttonsContainer.appendChild(confirmBoardButton);
 
-        const finger = document.createElement('p');
-        finger.textContent = '👆';
-        finger.classList.add('finger');
-        finger.style.visibility = 'hidden';
-        refreshBoardButton.appendChild(finger);
-        setTimeout(() => {
-            finger.style.visibility = 'visible';
-            zoomFinger(finger, -150, -100);
-        }, 1500);
-        setTimeout(() => {
-            const newBoard = new Gameboard();
-            gameRunner.initializeRandomBoard(newBoard);
-            player.playerBoard = newBoard;
-            clearBoard('select-board-display', 'player');
-            displayPlayerBoard(newBoard, 'select-board-display');
-            refreshBoardButton.style.boxShadow = 'inset 2px 2px 2px 2px rgba(0, 0, 0, 0.381)';
-        }, 2600);
-        setTimeout(() => {
-            refreshBoardButton.removeChild(finger);
-            refreshBoardButton.style.boxShadow = null;
-        }, 3400)
+        if (gamesCompleted == 0) {
+            const finger = document.createElement('p');
+            finger.textContent = '👆';
+            finger.classList.add('finger');
+            finger.style.visibility = 'hidden';
+            refreshBoardButton.appendChild(finger);
+            setTimeout(() => {
+                finger.style.visibility = 'visible';
+                zoomFinger(finger, -150, -100);
+            }, 1500);
+            setTimeout(() => {
+                const newBoard = new Gameboard();
+                gameRunner.initializeRandomBoard(newBoard);
+                player.playerBoard = newBoard;
+                clearBoard('select-board-display', 'player');
+                displayPlayerBoard(newBoard, 'select-board-display');
+                refreshBoardButton.style.boxShadow = 'inset 2px 2px 2px 2px rgba(0, 0, 0, 0.381)';
+            }, 2600);
+            setTimeout(() => {
+                refreshBoardButton.removeChild(finger);
+                refreshBoardButton.style.boxShadow = null;
+            }, 3400)
+        }
     }
 
     const setUpGameDisplay = function(playerBoardObj, enemyBoardObj) {
@@ -448,118 +459,121 @@ const display = (function() {
         player1.appendChild(enemyBoard);
         enemyBoard.classList.add('enemy-board');
         displayEnemyBoard(enemyBoardObj, 'player1', 'player1');
-        enemyBoard.style.opacity = '0';
-        enemyBoard.classList.add('temp-message-fade');
 
         const playerBoard = document.createElement('div');
         player1.appendChild(playerBoard);
         playerBoard.classList.add('player-board');
         displayPlayerBoard(playerBoardObj, 'player1');
-        playerBoard.style.opacity = '0';
-        playerBoard.classList.add('temp-message-fade');
 
-        // explain the board layout
-        const tempDivider = document.createElement('div');
-        tempDivider.classList.add('temp-divider');
-        game.appendChild(tempDivider);
-        const playerSideMessageContainer = document.createElement('div');
-        const playerSideMessage = document.createElement('h3');
-        playerSideMessage.textContent = 'Your ships are here ↓';
-        playerSideMessageContainer.appendChild(playerSideMessage);
-        playerSideMessageContainer.style.opacity = '0';
-        playerSideMessageContainer.classList.add('temp-message-container');
-        playerSideMessageContainer.classList.add('temp-message-fade');
-        const enemySideMessageContainer = document.createElement('div');
-        enemySideMessageContainer.style.opacity = '0';
-        const enemySideMessage = document.createElement('h3');
-        enemySideMessage.textContent = 'The enemy is here👀';
-        enemySideMessageContainer.appendChild(enemySideMessage);
-        enemySideMessageContainer.classList.add('temp-message-container');
-        enemySideMessageContainer.classList.add('temp-message-container-enemy');
-        enemySideMessageContainer.classList.add('temp-message-fade');
-        game.appendChild(playerSideMessageContainer);
-        game.appendChild(enemySideMessageContainer);
+        if (gamesCompleted == 0) {
+            enemyBoard.style.opacity = '0';
+            enemyBoard.classList.add('temp-message-fade');
+            playerBoard.style.opacity = '0';
+            playerBoard.classList.add('temp-message-fade');
 
-        let timer = 500;
-        setTimeout(() => {
-            playerSideMessageContainer.style.opacity = "1";
-        }, timer);
-        timer += 2000;
-        setTimeout(() => {
-            playerSideMessageContainer.style.opacity = "0";
-        }, timer);
-        timer += 1000;
-        setTimeout(() => {
-            playerBoard.style.opacity = '1';
-        }, timer);
-        timer += 1500;
-        setTimeout(() => {
-            enemySideMessageContainer.style.opacity = "1"
-        }, timer);
-        timer += 2000;
-        setTimeout(() => {
-            enemySideMessageContainer.style.opacity = "0";
-        }, timer);
-        timer += 1000;
-        setTimeout(() => {
-            enemySideMessageContainer.classList.remove('temp-message-fade');
-            enemySideMessage.textContent = 'Attack!';
-            enemySideMessageContainer.style.opacity = "1";
-        }, timer);
-        timer += 1500;
-        setTimeout(() => {
-            enemySideMessageContainer.classList.add('temp-message-fade-fast');
-            enemySideMessageContainer.style.opacity = "0";
-            enemyBoard.style.opacity = '1';
-        }, timer);
-        timer += 1000;
-        setTimeout(() => {
-            playerBoard.classList.remove('temp-message-fade');
-            enemyBoard.classList.remove('temp-message-fade');
-            game.removeChild(tempDivider);
-            game.removeChild(playerSideMessageContainer);
-            game.removeChild(enemySideMessageContainer);
-        }, timer);
-        timer += 100;
-        setTimeout(() => {
-            const finger2 = document.createElement('p');
-            finger2.textContent = '👆';
-            finger2.classList.add('finger2');
-            container.appendChild(finger2);
+            // explain the board layout
+            const tempDivider = document.createElement('div');
+            tempDivider.classList.add('temp-divider');
+            game.appendChild(tempDivider);
+            const playerSideMessageContainer = document.createElement('div');
+            const playerSideMessage = document.createElement('h3');
+            playerSideMessage.textContent = 'Your ships are here ↓';
+            playerSideMessageContainer.appendChild(playerSideMessage);
+            playerSideMessageContainer.style.opacity = '0';
+            playerSideMessageContainer.classList.add('temp-message-container');
+            playerSideMessageContainer.classList.add('temp-message-fade');
+            const enemySideMessageContainer = document.createElement('div');
+            enemySideMessageContainer.style.opacity = '0';
+            const enemySideMessage = document.createElement('h3');
+            enemySideMessage.textContent = 'The enemy is here👀';
+            enemySideMessageContainer.appendChild(enemySideMessage);
+            enemySideMessageContainer.classList.add('temp-message-container');
+            enemySideMessageContainer.classList.add('temp-message-container-enemy');
+            enemySideMessageContainer.classList.add('temp-message-fade');
+            game.appendChild(playerSideMessageContainer);
+            game.appendChild(enemySideMessageContainer);
 
-            const tapMessageDiv = document.createElement('div');
-            tapMessageDiv.classList.add('tap-to-attack-message');
-            const message = document.createElement('p');
-            message.textContent = 'Tap to send an attack!';
-            tapMessageDiv.style.opacity = '0';
+            let timer = 500;
             setTimeout(() => {
-                tapMessageDiv.style.opacity = '1';
-            }, 20)
-            tapMessageDiv.appendChild(message);
-            container.appendChild(tapMessageDiv);
-
-            zoomFinger(finger2, -40, -32);
-        }, timer);
-        timer += 1000;
-        setTimeout(() => {
-            const enemyBoardDiv = document.querySelector('.enemy-board');
-            const enemyBoardIcons = enemyBoard.querySelectorAll('img');
-            enemyBoardIcons[33].src = cannonBallIcon;
-        }, timer);
-
-        timer += 1250;
-        setTimeout(() => {
-            const finger2 = document.querySelector('.finger2');
-            container.removeChild(finger2);
-            const tapToAttackMessage = document.querySelector('.tap-to-attack-message');
-            tapToAttackMessage.style.opacity = '0';
+                playerSideMessageContainer.style.opacity = "1";
+            }, timer);
+            timer += 2000;
             setTimeout(() => {
-                    container.removeChild(tapToAttackMessage);
-            }, 400);
-            const enemyBoardDiv = document.querySelector('.enemy-board');
-            const enemyBoardIcons = enemyBoard.querySelectorAll('img');
-            enemyBoardIcons[33].src = waveIcon;
-        }, timer);
+                playerSideMessageContainer.style.opacity = "0";
+            }, timer);
+            timer += 1000;
+            setTimeout(() => {
+                playerBoard.style.opacity = '1';
+            }, timer);
+            timer += 1500;
+            setTimeout(() => {
+                enemySideMessageContainer.style.opacity = "1"
+            }, timer);
+            timer += 2000;
+            setTimeout(() => {
+                enemySideMessageContainer.style.opacity = "0";
+            }, timer);
+            timer += 1000;
+            setTimeout(() => {
+                enemySideMessageContainer.classList.remove('temp-message-fade');
+                enemySideMessage.textContent = 'Attack!';
+                enemySideMessageContainer.style.opacity = "1";
+            }, timer);
+            timer += 1500;
+            setTimeout(() => {
+                enemySideMessageContainer.classList.add('temp-message-fade-fast');
+                enemySideMessageContainer.style.opacity = "0";
+                enemyBoard.style.opacity = '1';
+            }, timer);
+            timer += 1000;
+            setTimeout(() => {
+                playerBoard.classList.remove('temp-message-fade');
+                enemyBoard.classList.remove('temp-message-fade');
+                game.removeChild(tempDivider);
+                game.removeChild(playerSideMessageContainer);
+                game.removeChild(enemySideMessageContainer);
+            }, timer);
+            timer += 100;
+            setTimeout(() => {
+                const finger2 = document.createElement('p');
+                finger2.textContent = '👆';
+                finger2.classList.add('finger2');
+                container.appendChild(finger2);
+
+                const tapMessageDiv = document.createElement('div');
+                tapMessageDiv.classList.add('tap-to-attack-message');
+                const message = document.createElement('p');
+                message.textContent = 'Tap to send an attack!';
+                tapMessageDiv.style.opacity = '0';
+                setTimeout(() => {
+                    tapMessageDiv.style.opacity = '1';
+                }, 20)
+                tapMessageDiv.appendChild(message);
+                container.appendChild(tapMessageDiv);
+
+                zoomFinger(finger2, -40, -32);
+            }, timer);
+            timer += 1000;
+            setTimeout(() => {
+                const enemyBoardDiv = document.querySelector('.enemy-board');
+                const enemyBoardIcons = enemyBoard.querySelectorAll('img');
+                enemyBoardIcons[33].src = cannonBallIcon;
+            }, timer);
+
+            timer += 1250;
+            setTimeout(() => {
+                const finger2 = document.querySelector('.finger2');
+                container.removeChild(finger2);
+                const tapToAttackMessage = document.querySelector('.tap-to-attack-message');
+                tapToAttackMessage.style.opacity = '0';
+                setTimeout(() => {
+                        container.removeChild(tapToAttackMessage);
+                }, 400);
+                const enemyBoardDiv = document.querySelector('.enemy-board');
+                const enemyBoardIcons = enemyBoard.querySelectorAll('img');
+                enemyBoardIcons[33].src = waveIcon;
+            }, timer);
+        }
     }
 
     const showRules = async function() {
@@ -672,7 +686,26 @@ const display = (function() {
         }, timer);
     }
 
-    return { displayPlayerBoard, displayEnemyBoard, clearBoard, refreshBoards, animateMissedAttack, displayWhichPlayersTurn, displayWinner, showBoardChoices, setUpGameDisplay, showRules };
+    const clearLastGameDisplay = function() {
+        const container = document.querySelector('.container');
+        const game = document.getElementById('game');
+        container.removeChild(game);
+
+        const selectBoardDisplay = document.createElement('div');
+        selectBoardDisplay.id = 'select-board-display';
+        const board = document.createElement('div');
+        board.classList.add('player-board');
+        selectBoardDisplay.appendChild(board);
+        container.appendChild(selectBoardDisplay);
+
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('options-buttons');
+        selectBoardDisplay.appendChild(buttonsContainer);
+
+        gamesCompleted++;
+    }
+
+    return { displayPlayerBoard, displayEnemyBoard, clearBoard, refreshBoards, animateMissedAttack, displayWhichPlayersTurn, displayWinner, showBoardChoices, setUpGameDisplay, showRules, clearLastGameDisplay };
 })()
 
 export default display;

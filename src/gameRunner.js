@@ -7,6 +7,7 @@ const gameRunner = (function() {
     let player1;
     let player2;
     let turnNumber = 1;
+    let gamesCompleted = 0;
 
     // returns random int between 0-9 
     const getRandomCoordinate = function() {
@@ -42,7 +43,9 @@ const gameRunner = (function() {
         initializeRandomBoard(player1.playerBoard);
         initializeRandomBoard(player2.playerBoard);
 
-        await display.showRules();
+        if (gamesCompleted == 0) {
+            await display.showRules();
+        }
         await playerPlaceShips();
         display.setUpGameDisplay(player1.playerBoard, player2.playerBoard);
 
@@ -106,7 +109,14 @@ const gameRunner = (function() {
         })
     }
 
-    return { playGame, initializeRandomBoard, nextTurn }
+    const startNewGame = function() {
+        display.clearLastGameDisplay();
+        gamesCompleted++;
+        turnNumber = 1;
+        playGame();
+    }
+
+    return { playGame, initializeRandomBoard, nextTurn, startNewGame }
 })();
 
 export default gameRunner;
