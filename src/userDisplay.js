@@ -90,10 +90,6 @@ const display = (function() {
                 const boardIcon = document.createElement('img');
                 displayBoard.appendChild(boardIcon);
 
-                // if (enemyGameboardObj.board[i][j] && !enemyGameboardObj.board[i][j].positionIsHit(i, j)) {
-                //     boardIcon.classList.add("here's-a-ship");
-                // }
-
                 // if previous miss
                 if (enemyGameboardObj.missedAttacks.has(`${i}${j}`)) {
                     boardIcon.src = '';
@@ -334,7 +330,7 @@ const display = (function() {
                 shuffledIndexes.push(i);
             }
         }
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 150; i++) {
             // get 2 random positions on from the board
             let index1 = Math.floor(Math.random() * (allBoardPositions.length - 1));
             let index2 = Math.floor(Math.random() * (allBoardPositions.length - 1));
