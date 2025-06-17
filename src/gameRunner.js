@@ -75,23 +75,12 @@ const gameRunner = (function() {
                     display.animateMissedAttack('player2', rowChoice, colChoice);
                     setTimeout(() => { // to let the animation finish
                         nextTurn();
-                    }, 2000)
-                }
-                else if (player1.playerBoard.board[rowChoice][colChoice].positionIsHit(rowChoice, colChoice)) {
-                    // if computer is already using a hit tracker when this hit occurs, change it to an advanced hit tracker
-                    if (player2.recentHitTracker) {
-                        player2.recentHitTracker = new AdvancedHitTracker(player2.recentHitTracker.hitLocation, computerCoordinates, player1.playerBoard);
-                        nextTurn();
-                    }
-                    else {
-                        player2.recentHitTracker = new HitTracker(rowChoice, colChoice, player1.playerBoard);
-                        nextTurn();
-                    }
+                    }, 1700)
                 }
                 else {
                     nextTurn();
                 }
-            }, 3000);
+            }, 2000);
         }
     }
 

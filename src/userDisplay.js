@@ -230,7 +230,7 @@ const display = (function() {
 
             setTimeout(() => {
                 defensivePositionIcon.classList.remove('cannon-ball-fade-fast');
-                defensivePositionIcon.classList.add('cannon-ball-fade');
+                defensivePositionIcon.classList.add('cannon-ball-fade-slow');
             }, 550)
             setTimeout(() => {
                 defensivePositionIcon.style.opacity = "0";
@@ -285,7 +285,7 @@ const display = (function() {
                     losersBoard.removeChild(losingBoardIcons[i]);
                 }, 800);
             }
-        }, 6500);
+        }, 6000);
         setTimeout(() => {
             const winningMessageContainer = document.createElement('div');
             winningMessageContainer.style.opacity = '0';
@@ -313,7 +313,7 @@ const display = (function() {
             // playAgainButton.addEventListener('click', () => {
 
             // })
-        }, 7400);
+        }, 6900);
     }
 
     const dropBombsOnLosingBoard = function(board, enemyBoardObj) {
@@ -349,7 +349,7 @@ const display = (function() {
             const randomIcon = allBoardPositions[randomIndex];
 
             dropSingleBomb(randomIcon, timer);
-            timer += 50;
+            timer += 40;
         }
     }
 
@@ -419,7 +419,7 @@ const display = (function() {
             setTimeout(() => {
                 finger.style.visibility = 'visible';
                 zoomFinger(finger, -150, -100);
-            }, 1500);
+            }, 1200);
             setTimeout(() => {
                 const newBoard = new Gameboard();
                 gameRunner.initializeRandomBoard(newBoard);
@@ -427,11 +427,11 @@ const display = (function() {
                 clearBoard('select-board-display', 'player');
                 displayPlayerBoard(newBoard, 'select-board-display');
                 refreshBoardButton.style.boxShadow = 'inset 2px 2px 2px 2px rgba(0, 0, 0, 0.381)';
-            }, 2600);
+            }, 2300);
             setTimeout(() => {
                 refreshBoardButton.removeChild(finger);
                 refreshBoardButton.style.boxShadow = null;
-            }, 3400)
+            }, 3100)
         }
     }
 

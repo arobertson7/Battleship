@@ -58,22 +58,22 @@ class AdvancedHitTracker {
 
     getTargets(previousHitLocation, curHitLocation, targetBoard) {
         // determine the direction of the new hit in relation to the original hit
-        const prevHitRow = previousHitLocation[0];
-        const curHitRow = curHitLocation[0];
-        const prevHitCol = previousHitLocation[1];
-        const curHitCol = curHitLocation[1];
+        const prevHitRow = previousHitLocation[0]; // 3
+        const curHitRow = curHitLocation[0]; // 3
+        const prevHitCol = previousHitLocation[1]; // 4
+        const curHitCol = curHitLocation[1]; // 1
 
         let coordinateOnPath = null;
         let coordinateInOppositeDirection = null;
 
         if (prevHitRow == curHitRow) {
             // ship is horizontal
-            if (curHitCol - 1 == prevHitCol) {
+            if (curHitCol > prevHitCol) {
                 // moving right
                 coordinateOnPath = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'right');
                 coordinateInOppositeDirection = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'left');
             }
-            else if (curHitCol + 1 == prevHitCol) {
+            else if (curHitCol < prevHitCol) {
                 // moving left
                 coordinateOnPath = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'left');
                 coordinateInOppositeDirection = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'right');
@@ -81,12 +81,12 @@ class AdvancedHitTracker {
         }
         else if (prevHitCol == curHitCol) {
             // ship is vertical
-            if (curHitRow - 1 == prevHitRow) {
+            if (curHitRow > prevHitRow) {
                 // moving down
                 coordinateOnPath = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'down');
                 coordinateInOppositeDirection = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'up');
             }
-            else if (curHitRow + 1 == prevHitRow) {
+            else if (curHitRow < prevHitRow) {
                 // moving up
                 coordinateOnPath = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'up');
                 coordinateInOppositeDirection = this.findNextAttackLocation(targetBoard, curHitRow, curHitCol, 'down');
@@ -100,7 +100,6 @@ class AdvancedHitTracker {
         if (coordinateOnPath) {
             validTargets.push(coordinateOnPath);
         }
-        console.log(validTargets);
         return validTargets.length != 0 ? validTargets : null;
     }
 
@@ -167,14 +166,21 @@ class Player {
     }
 
     playSmartComputerTurn(targetBoard) {
+        let targetRow;
+        let targetCol;
+
         // if no tracker, then no recent hit. just go for random attack
         if (!this.recentHitTracker) {
-            return this.playRandomComputerTurn(targetBoard);
+            const targetCoordinates = this.playRandomComputerTurn(targetBoard);
+            targetRow = targetCoordinates[0];
+            targetCol = targetCoordinates[1];
         }
         // hit tracker returned no valid targets, erase it from computerPlayer and play random move
         else if (!this.recentHitTracker.potentialTargets) {
             this.recentHitTracker = null;
-            return this.playRandomComputerTurn(targetBoard);
+            const targetCoordinates = this.playRandomComputerTurn(targetBoard);
+            targetRow = targetCoordinates[0];
+            targetCol = targetCoordinates[1];
         }
         // else try smart attack
         else {
@@ -187,13 +193,26 @@ class Player {
             // hitTracker already vetted for invalid and repeat attacks
             targetBoard.receiveAttack(chosenTarget[0], chosenTarget[1]);
 
+            targetRow = chosenTarget[0];
+            targetCol = chosenTarget[1];
+        }
+
+        // LOGIC FOR IF THE ATTACK WAS SUCCESSFUL
+        if (targetBoard.board[targetRow][targetCol] && targetBoard.board[targetRow][targetCol].positionIsHit(targetRow, targetCol)) {
             // if the ship is sunk, computer doesn't need to keep searching around it
-            if (targetBoard.board[chosenTarget[0]][chosenTarget[1]] && targetBoard.board[chosenTarget[0]][chosenTarget[1]].isSunk()) {
+            if (targetBoard.board[targetRow][targetCol].isSunk()) {
                 this.recentHitTracker = null;
             }
-
-            return [chosenTarget[0], chosenTarget[1]];
+            // if not sunk and computer is already using a hit tracker when this hit occurs, change it to an advanced hit tracker
+            else if (this.recentHitTracker) {
+                this.recentHitTracker = new AdvancedHitTracker(this.recentHitTracker.hitLocation, [targetRow, targetCol], targetBoard);
+            }
+            else {
+                this.recentHitTracker = new HitTracker(targetRow, targetCol, targetBoard);
+            }
         }
+
+        return [targetRow, targetCol];
     }
 
     // returns an array with the played coordinates: ex: returns [row, col]
