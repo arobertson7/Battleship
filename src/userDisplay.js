@@ -196,7 +196,7 @@ const display = (function() {
             sinkShipHelper(shipIcon, curTilt, curOpaciy, timer);
             curTilt++;
             curOpaciy -= 0.0025;
-            timer += 7;
+            timer += 5;
         }
     }
 

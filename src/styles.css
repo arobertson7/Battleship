@@ -238,7 +238,10 @@ html, body {
     height: 10%;
     border-radius: 20px;
     color: rgb(0, 122, 254);
-    box-shadow: 1.2px 1.2px 1.2px 1.2px rgba(0, 0, 0, 0.381);
+    box-shadow: 1.5px 1.5px 1.5px 1.5px rgba(0, 0, 0, 0.381);
+    border: none;
+    font-weight: 700;
+    letter-spacing: 0.02rem;
 }
 
 #player1 {
